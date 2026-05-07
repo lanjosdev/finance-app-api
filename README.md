@@ -7,6 +7,9 @@ Este é o repositório da API do aplicativo de finanças (atualmente usado para 
 O projeto utiliza as seguintes tecnologias em seu ambiente:
 
 - **[Node.js](https://nodejs.org/pt-br/)** (configurado com ES Modules `type: "module"`)
+- **[Express](https://expressjs.com/)** para o roteamento e criação da API REST
+- **[PostgreSQL](https://www.postgresql.org/)** (`pg`) como banco de dados relacional
+- **[dotenv](https://github.com/motdotla/dotenv)** para gerenciamento de variáveis de ambiente
 - **[ESLint](https://eslint.org/)** para padronização de código
 - **[Prettier](https://prettier.io/)** para formatação do código
 - **[Husky](https://typicode.github.io/husky/)** para Git Hooks
@@ -28,10 +31,21 @@ Siga os passos abaixo para clonar e rodar o projeto localmente:
    npm install
    ```
 
-3. **Execute o projeto**
-   Atualmente, o entrypoint do projeto é o `index.js`. Para testar a execução inicial:
+3. **Configure as Variáveis de Ambiente**
+   Crie um arquivo `.env` na raiz do projeto contendo as credenciais de banco de dados e porta da aplicação, por exemplo:
+   ```env
+   PORT=3000
+   PGUSER=seu_usuario
+   PGHOST=localhost
+   PGPASSWORD=sua_senha
+   PGDATABASE=seu_banco
+   PGPORT=5432
+   ```
+
+4. **Execute o projeto**
+   Atualmente, o entrypoint do projeto é o `src/index.js`. Para testar a execução inicial:
    ```bash
-   node index.js
+   node src/index.js
    ```
 
 ## 📐 Padrões de Código (Linting & Formatação)
