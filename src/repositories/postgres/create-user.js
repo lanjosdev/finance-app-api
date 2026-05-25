@@ -15,6 +15,9 @@ export class PostgresCreateUserRepository {
         );
         const createdUser = results[0];
 
-        return createdUser;
+        // eslint-disable-next-line no-unused-vars
+        const { password, ...userWithoutPassword } = createdUser;
+
+        return userWithoutPassword;
     }
 }
