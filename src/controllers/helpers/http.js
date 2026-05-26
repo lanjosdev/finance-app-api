@@ -1,4 +1,5 @@
 export class HttpHelper {
+    // 400
     static badRequest(body) {
         // Se passar apenas a mensagem como string (ex: badRequest('Erro!'))
         if (typeof body === 'string') {
@@ -31,6 +32,17 @@ export class HttpHelper {
         };
     }
 
+    static conflict(body) {
+        return {
+            statusCode: 409,
+            body: {
+                success: false, // valor default
+                ...body, // sobrescreve 'success' se existir em bodyData, e adiciona o resto
+            },
+        };
+    }
+
+    // 200
     static ok(body) {
         return {
             statusCode: 200,
@@ -52,6 +64,7 @@ export class HttpHelper {
         };
     }
 
+    // 500
     static serverError(message = 'Ocorreu um erro no servidor.') {
         return {
             statusCode: 500,

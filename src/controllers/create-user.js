@@ -1,6 +1,7 @@
 import { CreateUserUseCase } from '../use-cases/create-user.js';
 import validator from 'validator';
 import { HttpHelper } from './helpers/http.js';
+import { EmailAlreadyExistsError } from '../errors/user.js';
 export class CreateUserController {
     async execute(request) {
         try {
@@ -44,6 +45,12 @@ export class CreateUserController {
             });
         } catch (error) {
             console.error('Ocorreu um erro ao criar o usuário:', error);
+
+            if (error instanceof EmailAlreadyExistsError) {
+                return HttpHelper.conflict({
+                    message: error.message,
+                });
+            }
 
             return HttpHelper.serverError(
                 'Ocorreu um erro ao criar o usuário.',
