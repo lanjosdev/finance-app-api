@@ -21,6 +21,26 @@ export class HttpHelper {
         };
     }
 
+    static notFound(body) {
+        return {
+            statusCode: 404,
+            body: {
+                success: false, // valor default
+                ...body, // sobrescreve os defaults se vier no parâmetro
+            },
+        };
+    }
+
+    static ok(body) {
+        return {
+            statusCode: 200,
+            body: {
+                success: true, // valor default
+                ...body, // sobrescreve os defaults se vier no parâmetro
+            },
+        };
+    }
+
     static created(body) {
         return {
             statusCode: 201,
