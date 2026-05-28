@@ -5,8 +5,8 @@ import { PostgresGetUserByEmailRepository } from '../repositories/postgres/get-u
 import { EmailAlreadyExistsError } from '../errors/user.js';
 
 export class CreateUserUseCase {
-    async execute(createUserParams) {
-        const { email: userEmail, password: userPassword } = createUserParams;
+    async execute(createUserData) {
+        const { email: userEmail, password: userPassword } = createUserData;
 
         // Verificar se o email já existe
         const postgresGetUserByEmailRepository =
@@ -25,15 +25,16 @@ export class CreateUserUseCase {
         const hashedPassword = await bcrypt.hash(userPassword, 10);
 
         // criar o objeto do usuário
-        const user = {
-            ...createUserParams,
+        const userData = {
+            ...createUserData,
             id: userId,
             password: hashedPassword,
         };
 
         // criar o usuário no banco de dados
         const postgresCreateUserRepository = new PostgresCreateUserRepository();
-        const createdUser = await postgresCreateUserRepository.execute(user);
+        const createdUser =
+            await postgresCreateUserRepository.execute(userData);
 
         return createdUser;
     }
