@@ -15,7 +15,7 @@ export class UpdateUserUseCase {
                 userData.email,
             );
 
-            if (existingUser) {
+            if (existingUser && existingUser.id !== userId) {
                 throw new EmailAlreadyExistsError(userData.email);
             }
         }
