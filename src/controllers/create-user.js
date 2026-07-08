@@ -1,7 +1,13 @@
 import { CreateUserUseCase } from '../use-cases/create-user.js';
-import validator from 'validator';
 import { HttpHelper } from './helpers/http.js';
 import { EmailAlreadyExistsError } from '../errors/user.js';
+import {
+    checkIfEmailIsValid,
+    checkIfPasswordIsValid,
+    invalidEmailResponse,
+    invalidPasswordResponse,
+} from './helpers/user.js';
+
 export class CreateUserController {
     async execute(request) {
         try {
@@ -13,6 +19,7 @@ export class CreateUserController {
                 'email',
                 'password',
             ];
+
             for (const field of requiredFields) {
                 if (!reqBody[field] || reqBody[field].trim() === '') {
                     return HttpHelper.badRequest({
@@ -21,18 +28,14 @@ export class CreateUserController {
                 }
             }
 
-            const passwordIsValid = reqBody.password.length >= 6;
+            const passwordIsValid = checkIfPasswordIsValid(reqBody.password);
             if (!passwordIsValid) {
-                return HttpHelper.badRequest({
-                    message: 'A senha deve ter no mínimo 6 caracteres.',
-                });
+                return invalidPasswordResponse();
             }
 
-            const emailIsValid = validator.isEmail(reqBody.email);
+            const emailIsValid = checkIfEmailIsValid(reqBody.email);
             if (!emailIsValid) {
-                return HttpHelper.badRequest({
-                    message: 'O email é inválido.',
-                });
+                return invalidEmailResponse();
             }
 
             // chamar o caso de uso para criar o usuário

@@ -2,6 +2,13 @@ import validator from 'validator';
 import { HttpHelper } from './helpers/http.js';
 import { UpdateUserUseCase } from '../use-cases/update-user.js';
 import { EmailAlreadyExistsError } from '../errors/user.js';
+import {
+    checkIfEmailIsValid,
+    checkIfPasswordIsValid,
+    invalidEmailResponse,
+    invalidIdResponse,
+    invalidPasswordResponse,
+} from './helpers/user.js';
 
 export class UpdateUserController {
     async execute(request) {
@@ -11,9 +18,7 @@ export class UpdateUserController {
             const uuidIsValid = validator.isUUID(userId);
 
             if (!uuidIsValid) {
-                return HttpHelper.badRequest({
-                    message: 'O UUID do usuário é inválido.',
-                });
+                return invalidIdResponse();
             }
 
             // Validação de campos inválidos no corpo da requisição
@@ -37,23 +42,21 @@ export class UpdateUserController {
 
             // Validar o email, se fornecido
             if (reqBody.email) {
-                const emailIsValid = validator.isEmail(reqBody.email);
+                const emailIsValid = checkIfEmailIsValid(reqBody.email);
 
                 if (!emailIsValid) {
-                    return HttpHelper.badRequest({
-                        message: 'O email fornecido é inválido.',
-                    });
+                    return invalidEmailResponse();
                 }
             }
 
             // Validar a senha, se fornecida
             if (reqBody.password) {
-                const passwordIsValid = reqBody.password.length >= 6;
+                const passwordIsValid = checkIfPasswordIsValid(
+                    reqBody.password,
+                );
 
                 if (!passwordIsValid) {
-                    return HttpHelper.badRequest({
-                        message: 'A senha deve ter no mínimo 6 caracteres.',
-                    });
+                    return invalidPasswordResponse();
                 }
             }
 
