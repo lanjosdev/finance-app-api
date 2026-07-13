@@ -1,4 +1,3 @@
-import { HttpHelper } from './helpers/http.js';
 import { UpdateUserUseCase } from '../use-cases/update-user.js';
 import { EmailAlreadyExistsError } from '../errors/user.js';
 import {
@@ -8,7 +7,8 @@ import {
     invalidEmailResponse,
     invalidIdResponse,
     invalidPasswordResponse,
-} from './helpers/user.js';
+    HttpHelper,
+} from './helpers/index.js';
 import { GetUserByIdUseCase } from '../use-cases/get-user-by-id.js';
 
 export class UpdateUserController {
