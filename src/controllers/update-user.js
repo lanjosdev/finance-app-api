@@ -1,24 +1,35 @@
-import validator from 'validator';
 import { HttpHelper } from './helpers/http.js';
 import { UpdateUserUseCase } from '../use-cases/update-user.js';
 import { EmailAlreadyExistsError } from '../errors/user.js';
 import {
     checkIfEmailIsValid,
+    checkIfIdIsValid,
     checkIfPasswordIsValid,
     invalidEmailResponse,
     invalidIdResponse,
     invalidPasswordResponse,
 } from './helpers/user.js';
+import { GetUserByIdUseCase } from '../use-cases/get-user-by-id.js';
 
 export class UpdateUserController {
     async execute(request) {
         try {
             // Validar o UUID do usuário
             const userId = request.params.userId;
-            const uuidIsValid = validator.isUUID(userId);
+            const uuidIsValid = checkIfIdIsValid(userId);
 
             if (!uuidIsValid) {
                 return invalidIdResponse();
+            }
+
+            // Verificar se o usuário existe antes de tentar atualizar
+            const getUserByIdUseCase = new GetUserByIdUseCase();
+            const user = await getUserByIdUseCase.execute(userId);
+
+            if (!user) {
+                return HttpHelper.notFound({
+                    message: 'Usuário não encontrado.',
+                });
             }
 
             // Validação de campos inválidos no corpo da requisição

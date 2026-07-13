@@ -1,13 +1,12 @@
 import { GetUserByIdUseCase } from '../use-cases/get-user-by-id.js';
-import { invalidIdResponse } from './helpers/user.js';
+import { checkIfIdIsValid, invalidIdResponse } from './helpers/user.js';
 import { HttpHelper } from './helpers/http.js';
-import validator from 'validator';
 
 export class GetUserByIdController {
     async execute(request) {
         try {
             const userId = request.params.userId;
-            const uuidIsValid = validator.isUUID(userId);
+            const uuidIsValid = checkIfIdIsValid(userId);
 
             if (!uuidIsValid) {
                 return invalidIdResponse();
